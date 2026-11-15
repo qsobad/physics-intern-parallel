@@ -1,12 +1,17 @@
 # physics-intern-parallel
 
-One problem per directory. `run_parallel.sh` starts them all at once, and a
-run for P-3 never reads or writes P-4.
+One problem per directory.
+
+    python3 run_autoresearch.py P-3
+
+The command detaches and returns at once. Each problem runs inside
+`runs/P-<n>/`, which is a complete workspace of its own, so a run for P-3
+never reads or writes P-4. Start the next problem with the same command and
+another id.
 
 This is a copy of the physics-intern method, changed in one place: the original
 keeps the live problem at the repository root and archives the previous one
-before the next can start, so two problems cannot run together. Here each
-problem runs inside `runs/P-<n>/`, which is a complete workspace of its own.
+before the next can start, so two problems cannot run together.
 
 The original workspace at `/data/projects/physics-intern` is not touched. A
 problem that is already running there keeps running there.
@@ -17,25 +22,13 @@ problem that is already running there keeps running there.
   the run directory at launch and not modified after that.
 - `runs/P-<n>/` — everything that problem produces: `problem.md`, `survey.md`,
   `plan.md`, `research_log.md`, `computations/`, `derivations/`, `critiques/`,
-  `notes/`. Created on launch. Safe to delete; the statement survives in
-  `problems/`.
+  `notes/`, and `autoresearch.log`. Created on launch. Safe to delete; the
+  statement survives in `problems/`.
 - `prompts/`, `skills/`, `AGENTS.md` — the method, copied into each run
   directory so a run does not depend on files outside itself.
 - `.venv` — a symlink to `/data/projects/physics-intern/.venv`. Not a second copy.
 
-## Run
-
-```bash
-# one problem
-./run_one.sh P-3
-
-# several at once
-./run_parallel.sh P-3 P-4 P-5
-```
-
-`run_one.sh` refuses to start unless `problems/P-<n>.md` exists. Each pass
-appends to its own `runs/P-<n>/autoresearch.log`. `run_parallel.sh` prints the
-pid of each pass and returns immediately; the passes keep running.
+The runner refuses to start unless `problems/P-<n>.md` exists.
 
 A second launch of a pass that already has a `runs/P-<n>/` directory resumes
 that run, because the runner infers its start point from the files already
