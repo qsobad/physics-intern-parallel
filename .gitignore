@@ -2,7 +2,7 @@ __pycache__/
 *.pyc
 *.pyo
 .DS_Store
-.venv/
+.venv
 .ipynb_checkpoints/
 
 # runs/ holds one directory per problem and is rebuilt on launch
