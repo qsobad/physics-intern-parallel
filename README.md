@@ -23,23 +23,25 @@ problem that is already running there keeps running there.
   the run directory at launch and not modified after that.
 - `runs/P-<n>/` — everything that problem produces: `problem.md`, `survey.md`,
   `plan.md`, `research_log.md`, `computations/`, `derivations/`, `critiques/`,
-  `notes/`, and `autoresearch.log`. Created on launch. Safe to delete; the
-  statement survives in `problems/`.
-- `prompts/`, `skills/`, `AGENTS.md` — the method, copied into each run
-  directory so a run does not depend on files outside itself.
-- `.venv` — a symlink to `/data/projects/physics-intern/.venv`. Not a second copy.
+  `notes/`, and `autoresearch.log`. Created on launch and gitignored, so it is
+  not committed. Safe to delete; the statement survives in `problems/`.
 
-The runner refuses to start unless `problems/P-<n>.md` exists.
-
-A second launch of a pass that already has a `runs/P-<n>/` directory resumes
-that run, because the runner infers its start point from the files already
-there. To start a pass over, delete its `runs/P-<n>/` first.
+The runner refuses to start unless `problems/P-<n>.md` exists. It copies
+`prompts/`, `skills/`, `AGENTS.md`, and the statement into the run directory on
+every launch, overwriting what is there, so launch a pass once. To start a pass
+over, delete its `runs/P-<n>/` first; deleting it is the only reset, since
+nothing under `runs/` is in the repository. Output goes to
+`runs/P-<n>/autoresearch.log`.
 
 ## What is shared
 
-Only the virtualenv, and it is read at import time. A pass that needs a package
-the shared environment lacks should say so in its log rather than install into
-the shared environment, since every other pass imports from it.
+`prompts/`, `skills/`, and `AGENTS.md` are the method. They are copied into each
+run directory at launch, so a run reads its own copy and not the originals.
+
+The virtualenv is a symlink to `/data/projects/physics-intern/.venv`, read at
+import time and not a second copy. A pass that needs a package the shared
+environment lacks should say so in its log rather than install into it, since
+every other pass imports from it.
 
 Nothing else crosses a pass boundary. There is no root `problem.md`, no shared
 `research_log.md`, and no archive step, because there is nothing to archive:
