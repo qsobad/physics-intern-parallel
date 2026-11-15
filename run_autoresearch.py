@@ -1,28 +1,22 @@
 #!/usr/bin/env python3
-"""Run one problem in its own directory and its own git repository.
+"""Run one problem in its own directory.
 
     python3 run_autoresearch.py P-3
 
 The process detaches and returns at once. A second call on a problem that
-already has a run directory resumes it. Each problem's directory contains its
-own .git, so two problems running at the same time never touch the same index,
-HEAD, or lock. The only thing they share is the read-only virtualenv symlink.
+already has a run directory resumes it. Each problem writes only under
+runs/P-<n>/, so two problems running at the same time do not touch each
+other's files. They share one git repository and the read-only virtualenv
+symlink; the run directories are gitignored.
 """
 
 import os
 import shutil
-import subprocess
 import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 GROK = os.environ.get("GROK_BIN", "grok")
-REMOTE = "git@git.29tech.cn:qshsit/physics-intern-parallel.git"
-
-
-def git(run: Path, *args: str) -> None:
-    subprocess.run(["git", "-C", str(run), *args], check=True,
-                   capture_output=True, text=True)
 
 
 def main() -> int:
@@ -54,17 +48,6 @@ def main() -> int:
     template = (ROOT / "prompts" / "run-template.md").read_text()
     (run / "notes" / "autoresearch-prompt.md").write_text(
         template.replace("__PASS__", pass_id))
-
-    # A pass commits after every step. Its commits go to refs/heads/<pass id>
-    # on the shared remote, and its index lives inside its own .git, so two
-    # passes never take the same lock.
-    if not (run / ".git").exists():
-        git(run, "init", "-q", "-b", pass_id)
-        git(run, "remote", "add", "origin", REMOTE)
-        (run / ".gitignore").write_text(".venv\n")
-        git(run, "add", "-A")
-        git(run, "-c", "commit.gpgsign=false", "commit", "-q",
-            "-m", f"{pass_id}: workspace initialised")
 
     if os.fork():
         return 0

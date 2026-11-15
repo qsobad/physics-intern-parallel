@@ -5,11 +5,10 @@ One problem per directory.
     python3 run_autoresearch.py P-3
 
 The command detaches and returns at once. Each problem runs inside
-`runs/P-<n>/`, and that directory is its own git repository: its branch is
-named `P-<n>`, its index and lock live in its own `.git`, and its commits are
-pushed to `refs/heads/P-<n>` on the shared remote. A run for P-3 never reads,
-writes, or commits over P-4, so the two cannot block each other on a lock.
-Start the next problem with the same command and another id.
+`runs/P-<n>/`, which holds only that problem's files, so a run for P-3 never
+reads or writes P-4. Start the next problem with the same command and another
+id. All problems share this one repository; a run directory is not its own
+repository and is not committed.
 
 This is a copy of the physics-intern method, changed in one place: the original
 keeps the live problem at the repository root and archives the previous one
