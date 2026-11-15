@@ -29,9 +29,14 @@ problem that is already running there keeps running there.
 The runner refuses to start unless `problems/P-<n>.md` exists. It copies
 `prompts/`, `skills/`, `AGENTS.md`, and the statement into the run directory on
 every launch, overwriting what is there, so launch a pass once. To start a pass
-over, delete its `runs/P-<n>/` first; deleting it is the only reset, since
-nothing under `runs/` is in the repository. Output goes to
+over, delete its `runs/P-<n>/` first. Output goes to
 `runs/P-<n>/autoresearch.log`.
+
+A finished pass stays in `runs/P-<n>/`. There is no archive step and no moving
+of a finished pass anywhere else: the run directory is the pass's only copy.
+Do not delete a `runs/P-<n>/` whose statement is not in `problems/`, or the
+pass is gone. `runs/` is gitignored, so a pass that should survive a checkout
+has to be copied out of it deliberately.
 
 ## What is shared
 
