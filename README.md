@@ -14,8 +14,8 @@ This is a copy of the physics-intern method, changed in one place: the original
 keeps the live problem at the repository root and archives the previous one
 before the next can start, so two problems cannot run together.
 
-The original workspace at `/data/projects/physics-intern` is not touched. A
-problem that is already running there keeps running there.
+The single-problem workspace this was copied from is not touched. A problem
+that is already running there keeps running there.
 
 ## Layout
 
@@ -43,8 +43,8 @@ has to be copied out of it deliberately.
 `prompts/`, `skills/`, and `AGENTS.md` are the method. They are copied into each
 run directory at launch, so a run reads its own copy and not the originals.
 
-The virtualenv is a symlink to `/data/projects/physics-intern/.venv`, read at
-import time and not a second copy. A pass that needs a package the shared
+The virtualenv is a symlink to the source workspace's `.venv`, read at import
+time and not a second copy. A pass that needs a package the shared
 environment lacks should say so in its log rather than install into it, since
 every other pass imports from it.
 
